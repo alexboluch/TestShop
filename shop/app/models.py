@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
 
+class Employee(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=50)
+    email = models.EmailField(null=True, blank=True)
+    phone = models.CharField(null=True, blank=True, max_length=15)
+    address = models.CharField(null=True, blank=True, max_length=50)
 
 class Item(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -13,13 +20,6 @@ class Item(models.Model):
     class Meta:
         ordering = ['-create_date']
 
-
-class Employee(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=50)
-    email = models.EmailField(null=True, blank=True)
-    phone = models.CharField(null=True, blank=True)
-    address = models.CharField(null=True, blank=True)
 
 
 class Sale(models.Model):
