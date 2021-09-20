@@ -1,8 +1,8 @@
 from django.views.generic import RedirectView
 from django.urls import path
-from .views import main_view
+from .views import main_view, item_detail_view
 
 urlpatterns = [
-    path('main/', main_view, name='main'),
-    path('', RedirectView.as_view(url='/main/', permanent=True))
+    path('', main_view, name='main'),
+    path('item/<uuid:pk>/', item_detail_view, name='item_detail'),
 ]

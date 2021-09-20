@@ -1,0 +1,9 @@
+{% extends "base.html" %} {% block content %}
+<div class="item">
+    <div class="title">Title - {{item.title}}</div>
+    <div class="seller">Seller - {{item.seller}}</div>
+    <div class="price">Price - ${{item.price}}</div>
+    <div class="description">Description - {{item.description}}</div>
+    <div class="date_add">Date_add - {{item.create_date}}</div>
+</div>
+{% endblock %}

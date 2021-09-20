@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .views import Sale, Item, Employee
 
-# Register your models here.
+admin.site.register(Employee)
+admin.site.register(Item)
+admin.site.register(Sale)
