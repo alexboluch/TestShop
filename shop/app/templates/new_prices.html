@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block content %}
+<h2>Updated prices</h2>
+<div class="prices">
+    {% for price in prices %}
+    <div class="price">
+        <div class="items_name"><a href="{{price.item.get_absolute_url}}">{{price.item}}</a></div>
+        <div class="seller">Seller - {{price.seller}}</div>
+        <div class="new_price">New price - {{price.new_price}}</div>
+        <div class="create_date">Changes date - {{price.changes_date}}</div>
+
+
+
+    </div>
+    {% endfor %}
+</div>
+{% include "pagination.html" with page=prices %}{% endblock %}

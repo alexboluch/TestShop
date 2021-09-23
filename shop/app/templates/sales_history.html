@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block content %}
+<h2>Sales history</h2>
+<div class="sales">
+    {% for sale in sales %}
+    <div class="sale">
+        <div class="items_name">{{sale.item}}</div>
+        <div class="seller">Seller - {{sale.seller}}</div>
+        <div class="quantity">Quantity - {{sale.quantity}}</div>
+        <div class="final_price">Final price - ${{sale.final_price}}</div>
+        <div class="create_date">Sales date - {{sale.create_date}}</div>
+
+
+
+    </div>
+    {% endfor %}
+</div>
+{% include "pagination.html" with page=items %}{% endblock %}

@@ -5,11 +5,12 @@ body {
 .header {
     text-align: justify;
     letter-spacing: 1px;
-    height: 8em;
+    height: 10em;
     padding: 2em 10%;
     background-color: rgb(178 235 255 / 90%);
     color: #000;
     margin-bottom: 10px;
+    line-height: 1em;
 }
 
 .header::after {
@@ -36,6 +37,10 @@ body {
     display: inline-block;
     vertical-align: middle;
     height: 100%;
+}
+
+.header a {
+    padding-top: 10px;
 }
 
 .footer {
@@ -83,4 +88,50 @@ form {
 
 .content {
     padding: 20px;
+}
+
+.sales {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.sale {
+    padding: 10%;
+    border: 2px solid rgb(68 72 72);
+    margin: 10px;
+}
+
+.prices {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.price {
+    padding: 10%;
+    border: 2px solid rgb(68 72 72);
+    margin: 10px;
+}
+
+h2 {
+    text-align: center;
+    border-bottom: 2px solid rgb(68 72 72);
+    border-top: 2px solid rgb(68 72 72);
+    padding: 10px;
+}
+
+h1 {
+    text-align: center;
+    border-bottom: 2px solid rgb(68 72 72);
+    border-top: 2px solid rgb(68 72 72);
+    padding: 10px;
+}
+
+a {
+    color: black;
+    width: 30%;
+    text-align: center;
+}
+
+a:hover {
+    color: #00000066;
 }

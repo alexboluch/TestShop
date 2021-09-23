@@ -33,7 +33,7 @@ class Item(models.Model):
         return reverse ('item_detail', args = [str(self .id)])
 
     def __str__(self):
-        return self.title + " $" + str(self.price)
+        return self.title
 
     @property
     def get_seller_name(self):
@@ -56,3 +56,17 @@ class Sale(models.Model):
 
     def __str__(self):
         return str(self.item) + ", " + str(self.quantity) + " piec., " + str(self.seller) + ", " + str(self.create_date)
+
+
+class NewPrice(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    new_price = models.IntegerField()
+    seller = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    changes_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-changes_date']
+
+    def __str__(self):
+        return str(self.item) + ", to - $" + str(self.new_price) + ", " + str(self.changes_date)

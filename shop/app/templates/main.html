@@ -1,4 +1,5 @@
 {% extends "base.html" %} {% block content %}
+<h2>List of items</h2>
 <div class="items">
     {% for item in items %}
     <div class="item">
@@ -6,7 +7,7 @@
             <a href={{item.get_absolute_url}} title="Detail">{{item.title}}</a>
         </div>
         <div class="seller">Seller - {{item.seller}}</div>
-        <div class="price">Price - ${{item.price}}</div>
+        <div class="items_price">Price - ${{item.price}}</div>
     </div>
     {% endfor %}
 </div>
