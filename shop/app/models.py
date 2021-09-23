@@ -13,6 +13,10 @@ class Employee(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def get_name(self):
+        return self.name
+
 
 class Item(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -29,7 +33,12 @@ class Item(models.Model):
         return reverse ('item_detail', args = [str(self .id)])
 
     def __str__(self):
-        return self.title + " $" + str(self.price) + " from " + str(self.seller)
+        return self.title + " $" + str(self.price)
+
+    @property
+    def get_seller_name(self):
+        return str(self.seller.get_name)
+
 
 
 class Sale(models.Model):
@@ -41,8 +50,9 @@ class Sale(models.Model):
     seller = models.ForeignKey(Employee, on_delete=models.CASCADE)
     create_date = models.DateTimeField(auto_now_add=True)
 
+
     class Meta:
         ordering = ['-create_date']
 
     def __str__(self):
-        return self.title + " " + self.quantity + " " + self.seller + " " + self.create_date
+        return str(self.item) + ", " + str(self.quantity) + " piec., " + str(self.seller) + ", " + str(self.create_date)
