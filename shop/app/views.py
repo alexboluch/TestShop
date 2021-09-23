@@ -2,13 +2,15 @@ from django.shortcuts import render
 from .models import Item, Employee, Sale
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import get_object_or_404
-from .forms import ItemBuyForm
+from .forms import ItemBuyForm, RegistrForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
+
 
 def main_view(request):
     items = Item.objects.all()
-    paginator = Paginator(items, 5)
+    paginator = Paginator(items, 10)
     page = request.GET.get('page')
     try:  
         posts = paginator.page(page)  
@@ -22,23 +24,7 @@ def main_view(request):
     }
     return render(request, 'main.html', context)
 
-
-# def item_detail_view(request, pk):
-#     item = get_object_or_404(Item, pk=pk)
-#     context = {
-#     'item':item,
-#     }
-#     return render(request, 'item_detail.html', context)
-
-
-# def item_detail_view(request, pk):
-#     item = get_object_or_404(Item, pk=pk)
-#     context = {
-#     'item':item,
-#     }
-#     return render(request, 'item_detail.html', context)
-
-
+@login_required(login_url='/accounts/login/')
 def item_buy_view(request, pk):
     data = {}
     item = get_object_or_404(Item, pk=pk)
@@ -71,3 +57,23 @@ def item_buy_view(request, pk):
     
     return render(request, 'item_detail.html', data)
 
+
+def registration(request):
+    if request.user.is_authenticated:
+        return HttpResponseRedirect('/')
+    data = {}
+    if request.method == 'POST':
+        form = RegistrForm(request.POST)
+        if form.is_valid():
+            print("valid")
+            user = form.save(commit=False)
+            user.save()
+            return HttpResponseRedirect('/')
+        else:
+            print("not valid")
+            data['form'] = form
+            return render(request, 'registration/registration.html', data)
+    else:
+        form = RegistrForm()
+        data['form'] = form
+        return render(request, 'registration/registration.html', data)

@@ -1,15 +1,14 @@
-{% extends "base.html" %} {% block content %} {% if form.errors %}
+{% extends "base.html" %} {% block content %}
+<form method="LINK" class="create_acc" action="/registration/">
+    <input type="submit" value="Create account">
+</form>{% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
 {% endif %} {% if next %} {% if user.is_authenticated %}
 <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
 {% else %}
 <p>Please login to see this page.</p>
 {% endif %} {% endif %}
-<div class="reg">
-    <button>
-      <a href="/reg/">Create account</a>
-    </button>
-</div>
+
 <div class="table">
     <form method="post" action="{% url 'login' %}">
         {% csrf_token %}
