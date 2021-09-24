@@ -1,11 +1,11 @@
 {% extends "base.html" %} {% block content %}
 <div class="detail">
-    <div class="title">Title - {{item.title}}</div>
-    <div class="items_price">Price - ${{item.price}}</div>
-    <div class="description">Description - {{item.description}}</div>
-    <form method="post">
-        {% csrf_token %} {{ form.as_p }}
-        <button class="buy" type="submit">Buy</button>
-    </form>
+    <p class="title">Title - {{item.title}}</з>
+        <p class="items_price">Price - ${{item.price}}</p>
+        <p class="description">Description - {{item.description}}</p>
+        <form method="post">
+            {% csrf_token %} {{ form.as_p }}
+            <button class="buy" type="submit">Buy</button>
+        </form>
 </div>
 {% endblock %}
