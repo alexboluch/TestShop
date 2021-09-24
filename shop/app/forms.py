@@ -20,15 +20,23 @@ QUANTITY_CHOICES = [
 
     
 
+# class ItemBuyForm(forms.ModelForm):
+#     title = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
+#     quantity = forms.ChoiceField(initial=1, widget=forms.Select(), choices=QUANTITY_CHOICES)
+#     price = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
+#     description = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
+    
+#     class Meta:
+#         model = Item
+#         fields = '__all__'
+
+
 class ItemBuyForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
     quantity = forms.ChoiceField(initial=1, widget=forms.Select(), choices=QUANTITY_CHOICES)
-    price = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    description = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
     
     class Meta:
         model = Item
-        fields = '__all__'
+        fields = ('seller', 'quantity',)
 
 
 class RegistrForm(UserCreationForm):

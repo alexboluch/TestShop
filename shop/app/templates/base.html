@@ -12,6 +12,7 @@
 
     <div class="header">
         <h1>Shop's name</h1>
+
         <nav>
             <a class="home" href="/" title="Home">Home</a> {% if user.is_authenticated %}
             <a class="logout" href="/accounts/logout/" title="Logout">Logout</a>
@@ -23,11 +24,12 @@
         </nav>
 
     </div>
-
-    {% block content %} {% endblock %}
-
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
     <div class="footer">
-
+        <div class="time">{{time}}</div>
+        <div class="date">{{date}}</div>
     </div>
 </body>
 
