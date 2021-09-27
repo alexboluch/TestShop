@@ -25,39 +25,6 @@ def main_view(request):
     return render(request, 'main.html', context)
 
 
-# @login_required(login_url='/accounts/login/')
-# def item_buy_view(request, pk):
-#     data = {}
-#     item = get_object_or_404(Item, pk=pk)
-#     if request.POST:
-#         form = ItemBuyForm(request.POST)
-#         if form.is_valid():
-#             print("Valid")
-#             price = int(form.cleaned_data["price"])
-#             quantity = int(form.cleaned_data["quantity"])
-#             final_price = price * quantity
-#             user = User.objects.get(username=request.user.username)
-#             self_item = Item.objects.get(title=form.cleaned_data["title"])
-#             self_seller = Employee.objects.get(name=form.cleaned_data["seller"])
-#             new_sale = Sale(
-#                 final_price=final_price,
-#                 quantity=quantity,
-#                 item=self_item,
-#                 seller=self_seller,
-#                 buyer=user
-#                 )
-#             new_sale.save()
-#             return HttpResponseRedirect("/")
-#         else:
-#             print("NOT Valid")
-#             data['form'] = form
-#             return render(request, 'item_detail.html', data)
-#     else:
-#         form = ItemBuyForm(instance=item)
-#         data['form'] = form
-    
-#     return render(request, 'item_detail.html', data)
-
 @login_required(login_url='/accounts/login/')
 def item_buy_view(request, pk):
     data = {}
