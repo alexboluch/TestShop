@@ -1,41 +1,25 @@
 from django import forms
-from .models import Item, Employee, Sale
+from .models import Item, Employee, Sale, NewPrice
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.core.validators import EmailValidator
 
 
-QUANTITY_CHOICES = [
-    ('1', 1),
-    ('2', 2),
-    ('3', 3),
-    ('4', 4),
-    ('5', 5),
-    ('6', 6),
-    ('7', 7),
-    ('8', 8),
-    ('9', 9),
-    ('10', 10),
-]
+def get_quantity_choices(num):
+    quantity_choices = list()
+    for i in range(1, num + 1):
+        quantity_choices.append((i, i,))
+    return tuple(quantity_choices)
 
-    
 
-# class ItemBuyForm(forms.ModelForm):
-#     title = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
-#     quantity = forms.ChoiceField(initial=1, widget=forms.Select(), choices=QUANTITY_CHOICES)
-#     price = forms.IntegerField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
-#     description = forms.CharField(widget=forms.TextInput(attrs={'readonly':'readonly'}))
-    
-#     class Meta:
-#         model = Item
-#         fields = '__all__'
+QUANTITY_CHOICES = get_quantity_choices(20)
 
 
 class ItemBuyForm(forms.ModelForm):
     quantity = forms.ChoiceField(initial=1, widget=forms.Select(), choices=QUANTITY_CHOICES)
-    
+    seller = forms.ModelChoiceField(queryset=Employee.objects.all(), empty_label=None)
     class Meta:
-        model = Item
+        model = Sale
         fields = ('seller', 'quantity',)
 
 

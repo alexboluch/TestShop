@@ -1,13 +1,17 @@
 from django.shortcuts import render
 from .models import Item, Employee, Sale, NewPrice
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from .forms import ItemBuyForm, RegistrForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import CreateView
+from annoying.decorators import render_to
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
+@render_to('main.html')
 def main_view(request):
     items = Item.objects.all()
     paginator = Paginator(items, 10)
@@ -22,65 +26,43 @@ def main_view(request):
         'items':posts,
         'page': page,
     }
-    return render(request, 'main.html', context)
+    return context
 
 
-@login_required(login_url='/accounts/login/')
-def item_buy_view(request, pk):
-    data = {}
-    item = get_object_or_404(Item, pk=pk)
-    if request.POST:
-        form = ItemBuyForm(request.POST)
-        if form.is_valid():
-            print("Valid")
-            price = item.price
-            quantity = int(form.cleaned_data["quantity"])
-            final_price = price * quantity
-            user = User.objects.get(username=request.user.username)
-            self_item = item
-            self_seller = item.seller
-            new_sale = Sale(
-                final_price=final_price,
-                quantity=quantity,
-                item=self_item,
-                seller=self_seller,
-                buyer=user
-                )
-            new_sale.save()
-            return HttpResponseRedirect("/")
-        else:
-            print("NOT Valid")
-            data['form'] = form
-            return render(request, 'item_detail.html', data)
-    else:
-        form = ItemBuyForm(instance=item)
-        data['form'] = form
-        data['item'] = item
-    
-    return render(request, 'item_detail.html', data)
+class ItemBuyView(LoginRequiredMixin, CreateView):
+    model = Sale
+    template_name = 'item_detail.html'
+    form_class = ItemBuyForm
+    success_url = '/'
 
 
-def registration(request):
-    if request.user.is_authenticated:
-        return HttpResponseRedirect('/')
-    data = {}
-    if request.method == 'POST':
-        form = RegistrForm(request.POST)
-        if form.is_valid():
-            print("valid")
-            user = form.save(commit=False)
-            user.save()
-            return HttpResponseRedirect('/')
-        else:
-            print("not valid")
-            data['form'] = form
-            return render(request, 'registration/registration.html', data)
-    else:
-        form = RegistrForm()
-        data['form'] = form
-        return render(request, 'registration/registration.html', data)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        item = Item.objects.get(id=self.kwargs['pk'])
+        context["item"] = item
+        return context
 
 
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        item = Item.objects.get(id=self.kwargs['pk'])
+        instance.quantity = int(form.cleaned_data["quantity"])
+        instance.final_price = item.price * instance.quantity
+        instance.buyer = User.objects.get(username=self.request.user.username)
+        instance.item = item
+        instance.seller = item.seller
+        instance.save()
+        return redirect(self.success_url)
+
+
+class Registration(CreateView):
+    model = User
+    template_name = 'registration/registration.html'
+    form_class = RegistrForm
+    success_url = '/'
+
+
+@render_to('sales_history.html')
 @login_required(login_url='/accounts/login/')
 def sales_history_view(request):
     sales = Sale.objects.all()
@@ -96,9 +78,10 @@ def sales_history_view(request):
         'sales':posts,
         'page': page,
     }
-    return render(request, 'sales_history.html', context)
+    return context
 
 
+@render_to('new_prices.html')
 @login_required(login_url='/accounts/login/')
 def prices_history_view(request):
     prices = NewPrice.objects.all()
@@ -114,6 +97,6 @@ def prices_history_view(request):
         'prices':posts,
         'page': page,
     }
-    return render(request, 'new_prices.html', context)
+    return context
 
 

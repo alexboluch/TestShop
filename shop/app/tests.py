@@ -22,13 +22,11 @@ class TestFullCycleTest(TestCase):
 #Test main page and search items names
     def test_view_detail(self):
         resp = self.client.get('/')
-        fruit_list = ['Pineapple', 'Banana', 'Grape', ]
-        for fruit in fruit_list:
-            if fruit in str(resp.content):
-                result = True
-            else:
-                result = False
-            self.assertEqual(result, True)
+        content = str(resp.content)
+        all_items = Item.objects.all()
+        fruit_list = list()
+        for item in all_items:
+            self.assertIn(item.title, content)
 
 #Test create Employee, Item and changing items price and create obj - NewPrice
     def test_add_new_item_and_change_price(self):
@@ -44,12 +42,10 @@ class TestFullCycleTest(TestCase):
             seller=new_seller
         )
         new_item.save()
-        alterable_item = Item.objects.get(title=title)
+        alterable_item = Item.objects.get(id=new_item.id)
         alterable_item.price = 100
         alterable_item.save()
-        changed_item = Item.objects.get(title=title)
-        self.assertEqual(changed_item.price, 100)
-        new_price = NewPrice.objects.get(item=changed_item, new_price=100)
+        new_price = NewPrice.objects.latest('changes_date')
         self.assertEqual(new_price.new_price, 100)
 
 
