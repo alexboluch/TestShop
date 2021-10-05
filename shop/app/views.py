@@ -36,19 +36,26 @@ class ItemBuyView(LoginRequiredMixin, CreateView):
     success_url = '/'
 
 
+    def get_item(self):
+        obj = get_object_or_404(Item, pk=self.kwargs['pk'])
+        return obj
+
+
+    item = property(get_item)
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        item = Item.objects.get(id=self.kwargs['pk'])
-        context["item"] = item
+        context["item"] = self.item
         return context
 
 
     def form_valid(self, form):
+        item = self.item
         instance = form.save(commit=False)
-        item = Item.objects.get(id=self.kwargs['pk'])
-        instance.quantity = int(form.cleaned_data["quantity"])
-        instance.final_price = item.price * instance.quantity
-        instance.buyer = User.objects.get(username=self.request.user.username)
+        instance.quantity = form.cleaned_data["quantity"]
+        instance.final_price = item.price * int(form.cleaned_data["quantity"])
+        instance.buyer = self.request.user
         instance.item = item
         instance.seller = item.seller
         instance.save()

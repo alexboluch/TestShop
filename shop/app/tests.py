@@ -4,6 +4,7 @@ from .views import *
 from django.test import Client
 
 class TestFullCycleTest(TestCase):
+    databases = {'default',}
     fixtures = ['initial_app_data.json', 'initial_data.json',]
 
 #Test main page
@@ -21,10 +22,10 @@ class TestFullCycleTest(TestCase):
 
 #Test main page and search items names
     def test_view_detail(self):
-        resp = self.client.get('/')
-        content = str(resp.content)
+        Item.objects.filter(title='Pineapple').update(title='Ананас')
         all_items = Item.objects.all()
-        fruit_list = list()
+        resp = self.client.get('/')
+        content = resp.content.decode('utf-8')
         for item in all_items:
             self.assertIn(item.title, content)
 
@@ -45,7 +46,7 @@ class TestFullCycleTest(TestCase):
         alterable_item = Item.objects.get(id=new_item.id)
         alterable_item.price = 100
         alterable_item.save()
-        new_price = NewPrice.objects.latest('changes_date')
+        new_price = NewPrice.objects.filter(item=new_item).latest('changes_date')
         self.assertEqual(new_price.new_price, 100)
 
 
