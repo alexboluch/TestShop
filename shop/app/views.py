@@ -36,12 +36,10 @@ class ItemBuyView(LoginRequiredMixin, CreateView):
     success_url = '/'
 
 
-    def get_item(self):
+    @property
+    def item(self):
         obj = get_object_or_404(Item, pk=self.kwargs['pk'])
         return obj
-
-
-    item = property(get_item)
 
 
     def get_context_data(self, **kwargs):
@@ -50,16 +48,11 @@ class ItemBuyView(LoginRequiredMixin, CreateView):
         return context
 
 
-    def form_valid(self, form):
-        item = self.item
-        instance = form.save(commit=False)
-        instance.quantity = form.cleaned_data["quantity"]
-        instance.final_price = item.price * int(form.cleaned_data["quantity"])
-        instance.buyer = self.request.user
-        instance.item = item
-        instance.seller = item.seller
-        instance.save()
-        return redirect(self.success_url)
+    def get_form_kwargs(self, *args, **kwargs):
+        kwargs = super().get_form_kwargs(*args, **kwargs)
+        kwargs['user'] = self.request.user
+        kwargs['item'] = self.item
+        return kwargs
 
 
 class Registration(CreateView):
